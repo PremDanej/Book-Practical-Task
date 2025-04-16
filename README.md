@@ -21,7 +21,6 @@ This app follows a clean MVC architecture to separate concerns and ensure testab
 - **Repository Layer** abstracts data source logic
 - **DataStoreManager** is used for caching JSON + timestamp
 - **Retrofit** handles network operations
-- **Swipe-to-Refresh** Added Swipe-Refresh-Layout
 
 
 ## 🖼 UI Design
@@ -43,24 +42,34 @@ This app implements the provided Figma design:
 ## 📁 Folder Structure
 
 ```
-├── model
-├── network
-├── repository
+├── components (common UI)
+├── model (data classes)
+├── network (Retrofit service)
+├── repository (data flow logic)
 ├── data
-    └── cache
-├── ui
-├── screen
-├── viewmodel
+│   └── cache (Datastore cache)
+├── ui (Color & theme)
+├── screen (Composable UI)
+│   └── home 
+├── viewmodel 
 ├── MainActivity.kt
+├── ARCHITECTURE.md
 └── README.md
 
 ```
 
 ## ⚠ Challenges & Solutions
 
-| Challenge | Solution|
-|-|-|
-|Efficient cache validation | Stored timestamp using DataStore and compared against current time
-Figma UI implementation | Used Compose components like LazyColumn, Card, Coil image loading
-API integration | Used Retrofit with Gson converter
-Local storage | Used DataStore for simplicity and performance
+| Challenge                  | Solution                                                           |
+|----------------------------|--------------------------------------------------------------------|
+| Efficient cache validation | Stored timestamp using DataStore and compared against current time |
+| Figma UI implementation    | Used Compose components like LazyColumn, Card, Coil image loading  |
+| API integration            | Used Retrofit with Gson converter                                  |
+| Local storage              | Used DataStore for simplicity and performance                      |
+
+## 🖼 Screenshots
+**Note:** Due to limited data resource, same data will be displayed multiple times.
+
+|                             First Half                             |                           Second Half                           |                             Final                              |
+|:------------------------------------------------------------------:|:---------------------------------------------------------------:|:--------------------------------------------------------------:|
+| <img src="images/first_half.webp" title="First Half" width="50%"/> | <img src="images/second_half.webp" title="Second" width="50%"/> | <img src="images/final_image.webp" title="Final" width="50%"/> |
