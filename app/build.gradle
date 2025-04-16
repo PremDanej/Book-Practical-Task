@@ -21,8 +21,17 @@ android {
         }
     }
 
+    // Added api URL to local.properties
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    def baseUrl = properties.getProperty('base.url')
+
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", baseUrl)
+        }
         release {
+            buildConfigField("String", "BASE_URL", baseUrl)
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -35,6 +44,7 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures {
+        buildConfig true
         compose true
     }
     composeOptions {
