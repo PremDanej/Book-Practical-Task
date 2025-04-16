@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.merp.jet.book.practical.app.network.BookDiscoveryService
 import com.merp.jet.book.practical.app.repository.BookDiscoveryRepository
 import com.merp.jet.book.practical.app.screen.home.HomeScreen
@@ -21,10 +22,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val service = BookDiscoveryService.getClient()
-        val repository = BookDiscoveryRepository(service)
-        val viewModel = BookDiscoveryViewModel(repository)
 
         setContent {
+            val context = LocalContext.current
+            val repository = BookDiscoveryRepository(service,context)
+            val viewModel = BookDiscoveryViewModel(repository)
             BookiesTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Surface(

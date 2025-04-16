@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -26,7 +27,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -44,6 +49,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.merp.jet.book.practical.app.R
@@ -73,8 +79,16 @@ val cardColor = Color(0xFFF5F5F5)
 val buttonOutlineColor = Color(0xFFD26E09)
 val textColor = Color(0xFF0F8079)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: BookDiscoveryViewModel) {
+
+    LaunchedEffect(Unit) {
+        viewModel.getDiscoveryItems()
+    }
+
+    val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+    val pullRefreshState = rememberPullToRefreshState( )
 
     val bannerElement by lazy { MutableLiveData<Element>() }
     val carouselElement by lazy { MutableLiveData<Element>() }
@@ -101,7 +115,17 @@ fun HomeScreen(viewModel: BookDiscoveryViewModel) {
             }
         }
 
-        LazyColumn(Modifier.fillMaxSize()) {
+        LazyColumn(
+            Modifier
+                .fillMaxSize()
+                .pullToRefresh( // Swipe Pull request added
+                    isRefreshing = refreshing,
+                    state = pullRefreshState,
+                    onRefresh = {
+                        viewModel.getDiscoveryItems()
+                    },
+                )
+        ) {
             item {
                 bannerElement.value?.let { DisplayBanner(it) }
                 carouselElement.value?.let { DisplayCarousel(it) }
